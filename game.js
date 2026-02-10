@@ -32,22 +32,23 @@ document.getElementById("rollBtn").addEventListener("click", () => {
     outcomes.push(rollDie());
   }
 
-  document.getElementById("results").innerText =
-    players[currentPlayer] + " rolled: " + outcomes.join(", ");
+  // Show dice images instead of text
+  document.getElementById("results").innerHTML =
+    players[currentPlayer] + " rolled: " + renderDice(outcomes);
 
   outcomes.forEach(outcome => {
     if (chips[currentPlayer] > 0) {
-      if (outcome === "L") {
+      if (outcome === "Left") {
         chips[currentPlayer]--;
         chips[(currentPlayer - 1 + players.length) % players.length]++;
-      } else if (outcome === "R") {
+      } else if (outcome === "Right") {
         chips[currentPlayer]--;
         chips[(currentPlayer + 1) % players.length]++;
-      } else if (outcome === "C") {
+      } else if (outcome === "Center") {
         chips[currentPlayer]--;
         centerPot++;
       }
-      // Dot means keep chip, no action
+      // Dottt means keep chip, no action
     }
   });
 
@@ -57,8 +58,15 @@ document.getElementById("rollBtn").addEventListener("click", () => {
 });
 
 function rollDie() {
-  const sides = ["L", "R", "C", "Dot"];
+  const sides = ["Left", "Right", "Center", "Dottt"];
   return sides[Math.floor(Math.random() * sides.length)];
+}
+
+// Render dice images
+function renderDice(outcomes) {
+  return outcomes.map(o =>
+    `<img src="assets/dice/${o}.png" alt="${o}" class="die">`
+  ).join(" ");
 }
 
 function updateTable() {
