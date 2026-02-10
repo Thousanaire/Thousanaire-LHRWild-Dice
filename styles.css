@@ -84,7 +84,7 @@ section {
 /* Game Board section */
 #game {
   width: 1000px;       /* wider box */
-  min-height: 700px;   /* taller box for breathing room */
+  min-height: 400px;   /* taller box for breathing room */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -202,3 +202,4 @@ button:hover {
     width: 100%;       /* sections take full width */
   }
 }
+
