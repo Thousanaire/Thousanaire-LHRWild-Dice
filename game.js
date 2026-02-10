@@ -73,7 +73,11 @@ function updateTable() {
   players.forEach((p, i) => {
     const playerDiv = document.getElementById("player" + i);
     if (playerDiv) {
-      playerDiv.innerText = `${p}\nChips: ${chips[i]}`;
+      // ✅ Only update the name and chips fields, not the whole div
+      const nameDiv = playerDiv.querySelector(".name");
+      const chipsDiv = playerDiv.querySelector(".chips");
+      if (nameDiv) nameDiv.textContent = p;
+      if (chipsDiv) chipsDiv.textContent = `Chips: ${chips[i]}`;
     }
   });
   document.getElementById("centerPot").innerText = `Center Pot: ${centerPot}`;
