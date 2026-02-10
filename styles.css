@@ -5,7 +5,7 @@ body {
   flex-direction: column;
   align-items: center;
   margin: 0;
-  background: #000; /* solid black background */
+  background: #000;
   color: #fff;
 }
 
@@ -15,16 +15,14 @@ header {
   padding: 1rem;
   width: 100%;
   display: flex;
-  justify-content: space-between; /* title left, join box right */
+  justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-header h1 {
-  margin: 0;
-}
+header h1 { margin: 0; }
 
-/* Join Game box inside header */
+/* Join Game box */
 #joinGame {
   background: rgba(255,255,255,0.9);
   color: #222;
@@ -80,7 +78,7 @@ section {
 /* Game Board section */
 #game {
   width: 100%;
-  max-width: 1000px; /* cap width on desktop */
+  max-width: 1000px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
@@ -92,7 +90,7 @@ section {
 /* Chat Box section */
 #chat {
   width: 100%;
-  max-width: 1000px; /* cap width on desktop */
+  max-width: 1000px;
   margin-top: 1rem;
 }
 
@@ -108,8 +106,9 @@ section {
 /* Game table (circle board) */
 #table {
   position: relative;
-  width: 600px;   /* larger circle for spacing */
-  height: 600px;
+  width: 90vw;          /* responsive width */
+  max-width: 600px;     /* cap on desktop */
+  aspect-ratio: 1 / 1;  /* keep square */
   margin: 20px auto;
   border-radius: 50%;
   background: radial-gradient(circle, #2e7d32 60%, #1b5e20 100%);
@@ -150,11 +149,11 @@ section {
   border: 2px solid #333;
 }
 
-/* Player positions – pushed outward */
-#player0 { top: 40px; left: 50%; transform: translateX(-50%); }
-#player1 { right: 40px; top: 50%; transform: translateY(-50%); }
-#player2 { bottom: 40px; left: 50%; transform: translateX(-50%); }
-#player3 { left: 40px; top: 50%; transform: translateY(-50%); }
+/* Player positions – percentage based */
+#player0 { top: 5%; left: 50%; transform: translateX(-50%); }
+#player1 { top: 50%; right: 5%; transform: translateY(-50%); }
+#player2 { bottom: 5%; left: 50%; transform: translateX(-50%); }
+#player3 { top: 50%; left: 5%; transform: translateY(-50%); }
 
 /* Center pot */
 #centerPot {
@@ -207,6 +206,7 @@ button:hover {
 @media (max-width: 768px) {
   #game, #chat { width: 100%; min-height: auto; }
   section { width: 100%; }
+  .player { width: 90px; font-size: 12px; }
   .player img.avatar { width: 55px; height: 55px; }
-  #table { width: 100%; height: auto; max-width: 500px; }
+  #table { max-width: 500px; }
 }
