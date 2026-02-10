@@ -103,8 +103,8 @@ section {
 /* Game table (circle board) */
 #table {
   position: relative;
-  width: 700px;   /* original circle size */
-  height: 700px;  /* original circle size */
+  width: 700px;   /* larger circle size */
+  height: 700px;  /* larger circle size */
   margin: 20px auto;
   border-radius: 50%;
   background: radial-gradient(circle, #2e7d32 60%, #1b5e20 100%);
@@ -117,7 +117,8 @@ section {
 /* Player seats */
 .player {
   position: absolute;
-  width: 100px;
+  width: 100px;       /* smaller boxes */
+  font-size: 14px;    /* smaller text */
   text-align: center;
   font-weight: bold;
   background: #fafafa;
@@ -134,11 +135,11 @@ section {
   transform: scale(1.1);
 }
 
-/* Player positions around the circle */
-#player0 { top: 10px; left: 50%; transform: translateX(-50%); }
-#player1 { right: 10px; top: 50%; transform: translateY(-50%); }
-#player2 { bottom: 10px; left: 50%; transform: translateX(-50%); }
-#player3 { left: 10px; top: 50%; transform: translateY(-50%); }
+/* Player positions around the circle – pushed outward */
+#player0 { top: 20px; left: 50%; transform: translateX(-50%); }
+#player1 { right: 20px; top: 50%; transform: translateY(-50%); }
+#player2 { bottom: 20px; left: 50%; transform: translateX(-50%); }
+#player3 { left: 20px; top: 50%; transform: translateY(-50%); }
 
 /* Center pot */
 #centerPot {
@@ -181,6 +182,5 @@ button:hover {
   background: #666;
   transform: translateY(-2px);
 }
-
 
 
