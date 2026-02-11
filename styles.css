@@ -65,23 +65,102 @@ header h1 {
   box-shadow: 0 4px 12px rgba(255,64,129,0.6);
 }
 
-/* Main layout fills screen */
+/* Main layout */
 main {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: stretch;
+  align-items: flex-start;
   flex: 1;
   width: 100%;
-  height: calc(100vh - 120px); /* full height minus header */
   padding: 1rem;
   box-sizing: border-box;
+  flex-wrap: wrap;
+  overflow-x: hidden;
 }
 
-/* Panels */
-section {
+/* Game Board */
+#game {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#table {
+  display: grid;
+  grid-template-areas:
+    "p0 p1"
+    "center center"
+    "p2 p3";
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Player avatars */
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+
+.name {
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.chips {
+  font-size: 14px;
+  color: #ff4081;
+}
+
+/* Center area with dice + pot */
+#centerArea {
+  grid-area: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.die {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+#centerPot {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: #222;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(255,64,129,0.6);
+}
+
+/* Controls under board */
+.controls {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Roll history */
+#history {
   flex: 1;
-  margin: 0 1rem;
   background: #1e1e1e;
   color: #fff;
   padding: 1rem;
@@ -89,81 +168,8 @@ section {
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
 }
 
-/* Dice panel centers content */
-#dicePanel {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* Dice display */
-.die {
-  width: 160px;
-  height: 160px;
-  margin: 12px auto;
-  border-radius: 16px;
-  background: linear-gradient(145deg, #fff, #ddd);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
-  animation: roll 0.6s ease;
-  object-fit: contain;
-}
-
-@keyframes roll {
-  from { transform: rotate(0deg) scale(0.8); }
-  to { transform: rotate(360deg) scale(1); }
-}
-
-/* Result text */
-#result {
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 0.5rem;
-  color: #ff4081;
-}
-
-/* Buttons */
-button {
-  background: linear-gradient(135deg, #ff4081, #7c4dff);
-  color: #fff;
-  border: none;
-  padding: 14px 28px;
-  margin: 12px auto;
-  cursor: pointer;
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 16px;
-  transition: transform 0.2s, box-shadow 0.3s;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255,64,129,0.6);
-}
-
-/* Player cards */
-.player {
-  background: #2a2a2a;
-  border: 2px solid #444;
-  border-radius: 12px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-  color: #fff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-  margin-bottom: 0.5rem;
-}
-
-.player.active {
-  border-color: #ff4081;
-  box-shadow: 0 0 12px #ff4081;
-  transform: scale(1.05);
-}
-
-/* Roll history */
 #rollHistory {
   flex: none;
   background: #222;
@@ -183,43 +189,15 @@ button:hover {
   border-radius: 12px;
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-
-  /* prevent flex growth */
   flex: none;
+  box-sizing: border-box;
 }
 
 #chatMessages {
-  height: 200px;           /* fixed height */
-  max-height: 200px;       /* lock height */
-  overflow-y: auto;        /* vertical scrollbar */
+  height: 200px;
+  max-height: 200px;
+  overflow-y: auto;
   background: #222;
   color: #eee;
   border-radius: 8px;
-  padding: 0.8rem;
-  margin-bottom: 0.5rem;
-  box-sizing: border-box;  /* padding stays inside height */
-}
-
-.chat-input {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#chatInput {
-  flex: 1;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #222;
-  color: #fff;
-  margin-right: 0.5rem;
-}
-
-#sendBtn {
-  background: linear-gradient(135deg, #ff4081, #7c4dff);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
+  padding: 
