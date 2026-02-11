@@ -164,8 +164,6 @@ button:hover {
 }
 
 /* Roll history */
-#messages {
+#rollHistory {
   flex: 1;
-  background: #222;
-  color: #eee;
-  border-radius:
+  background: #222
