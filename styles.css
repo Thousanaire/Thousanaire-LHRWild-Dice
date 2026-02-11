@@ -1,12 +1,12 @@
 /* Global styles */
 body {
   font-family: 'Trebuchet MS', Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin: 0;
   background: #000;
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* Header */
@@ -65,59 +65,44 @@ header h1 {
   box-shadow: 0 4px 12px rgba(255,64,129,0.6);
 }
 
-/* Main layout */
+/* Main layout fills screen */
 main {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin-top: 2rem;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 120px); /* full height minus header */
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 /* Panels */
 section {
+  flex: 1;
+  margin: 0 1rem;
   background: #1e1e1e;
   color: #fff;
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-  width: 320px;
-}
-
-/* Game Board section */
-#game {
-  width: 100%;
-  max-width: 1000px;
-  min-height: 400px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  margin: 0 auto;
-}
-
-/* Chat Box section */
-#chat {
-  width: 100%;
-  max-width: 1000px;
-  margin-top: 1rem;
-}
-
-#messages {
-  height: 220px;
   overflow-y: auto;
-  border: none;
-  margin-bottom: 1rem;
-  padding: 0.8rem;
-  background: #222;
-  color: #eee;
-  border-radius: 8px;
+}
+
+/* Dice panel centers content */
+#dicePanel {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 /* Dice display */
 .die {
-  width: 120px;
-  height: 120px;
+  width: 160px;
+  height: 160px;
   margin: 12px auto;
   border-radius: 16px;
   background: linear-gradient(145deg, #fff, #ddd);
@@ -133,7 +118,7 @@ section {
 
 /* Result text */
 #result {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   margin-top: 0.5rem;
   color: #ff4081;
@@ -169,8 +154,18 @@ button:hover {
   color: #fff;
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
   transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  margin-bottom: 0.5rem;
 }
 
 .player.active {
   border-color: #ff4081;
-  box-shadow: 0 0 
+  box-shadow: 0 0 12px #ff4081;
+  transform: scale(1.05);
+}
+
+/* Roll history */
+#messages {
+  flex: 1;
+  background: #222;
+  color: #eee;
+  border-radius:
