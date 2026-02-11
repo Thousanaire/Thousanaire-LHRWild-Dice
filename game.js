@@ -37,40 +37,40 @@ document.getElementById("rollBtn").addEventListener("click", () => {
   diceArea.innerHTML = renderDice(outcomes);
 
   document.getElementById("result").innerHTML =
-    players[currentPlayer] + " rolled: " +
-    outcomes.join(", ");
+    players[currentPlayer] + " rolled: " + outcomes.join(", ");
 
-  let wildRolled = false;
+  let wildCount = outcomes.filter(o => o === "Wild").length;
 
   // Resolve Left/Right/Center immediately
   outcomes.forEach(outcome => {
     if (outcome === "Left" && chips[currentPlayer] > 0) {
       chips[currentPlayer]--;
       chips[(currentPlayer - 1 + players.length) % players.length]++;
+      addHistory(players[currentPlayer], [`Left → passed chip left`]);
     } else if (outcome === "Right" && chips[currentPlayer] > 0) {
       chips[currentPlayer]--;
       chips[(currentPlayer + 1) % players.length]++;
+      addHistory(players[currentPlayer], [`Right → passed chip right`]);
     } else if (outcome === "Center" && chips[currentPlayer] > 0) {
       chips[currentPlayer]--;
       centerPot++;
-    } else if (outcome === "Wild") {
-      wildRolled = true;
+      addHistory(players[currentPlayer], [`Center → chip to pot`]);
     }
     // Dottt = keep chip
   });
 
   updatePlayerList();
 
-  if (wildRolled) {
+  if (wildCount > 0) {
     document.getElementById("result").innerHTML +=
-      `<br>${players[currentPlayer]} rolled a Wild! Choose a player to steal from.`;
-    showStealOptions(currentPlayer);
+      `<br>${players[currentPlayer]} rolled ${wildCount} Wild(s)! Choose opponents to steal from.`;
+    showWildStealOptions(currentPlayer, wildCount);
   } else {
     checkWinner();
     nextTurn();
   }
 
-  // Add to roll history
+  // Add to roll history summary
   addHistory(players[currentPlayer], outcomes);
 });
 
@@ -128,38 +128,41 @@ function highlightCurrentPlayer() {
   document.getElementById("currentTurn").innerText = `Current turn: ${players[currentPlayer]}`;
 }
 
-// Show steal options when Wild is rolled
-function showStealOptions(rollerIndex) {
+// Show steal options for multiple Wilds
+function showWildStealOptions(rollerIndex, wildCount) {
   const resultsDiv = document.getElementById("result");
-  const opponents = players.map((p, i) => ({ name: p, index: i }))
-                           .filter(o => o.index !== rollerIndex && chips[o.index] > 0);
-
   const optionsDiv = document.createElement("div");
   optionsDiv.id = "stealOptions";
 
-  if (opponents.length === 0) {
-    resultsDiv.innerHTML += `<br>No opponents have chips to steal.`;
-    checkWinner();
-    nextTurn();
-    return;
-  }
-
-  opponents.forEach(opponent => {
-    const btn = document.createElement("button");
-    btn.textContent = `Steal from ${opponent.name}`;
-    btn.onclick = () => {
-      chips[opponent.index]--;
-      chips[rollerIndex]++;
-      updatePlayerList();
-      document.getElementById("result").innerHTML +=
-        `<br>${players[rollerIndex]} stole a chip from ${opponent.name}!`;
+  function spendWild() {
+    if (wildCount <= 0) {
       optionsDiv.remove();
       checkWinner();
       nextTurn();
-    };
-    optionsDiv.appendChild(btn);
-  });
+      return;
+    }
 
+    optionsDiv.innerHTML = `<p>Choose a player to steal a chip (${wildCount} Wild(s) left):</p>`;
+    players.forEach((p, i) => {
+      if (i !== rollerIndex) {
+        const btn = document.createElement("button");
+        btn.textContent = `Steal from ${p}`;
+        btn.onclick = () => {
+          chips[rollerIndex]++;
+          if (chips[i] > 0) chips[i]--; // can steal from 0, but no negative
+          updatePlayerList();
+          addHistory(players[rollerIndex], [`Wild → stole from ${p}`]);
+          document.getElementById("result").innerHTML +=
+            `<br>${players[rollerIndex]} stole a chip from ${p}!`;
+          wildCount--;
+          spendWild();
+        };
+        optionsDiv.appendChild(btn);
+      }
+    });
+  }
+
+  spendWild();
   resultsDiv.appendChild(optionsDiv);
 }
 
