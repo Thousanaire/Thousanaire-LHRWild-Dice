@@ -2,6 +2,7 @@ let players = [];
 let chips = [];
 let centerPot = 0;
 let currentPlayer = 0;
+let idleDiceInterval; // for random dice cycling
 
 // Join game
 document.getElementById("joinBtn").addEventListener("click", () => {
@@ -12,6 +13,12 @@ document.getElementById("joinBtn").addEventListener("click", () => {
     updatePlayerList();
     document.getElementById("nameInput").value = "";
     highlightCurrentPlayer();
+
+    // Stop idle dice cycling once the game starts
+    if (idleDiceInterval) {
+      clearInterval(idleDiceInterval);
+      idleDiceInterval = null;
+    }
   }
 });
 
@@ -189,3 +196,26 @@ function addHistory(player, outcomes) {
   entry.textContent = `${player}: ${outcomes.join(", ")} at ${time}`;
   historyDiv.prepend(entry);
 }
+
+// Show random dice faces at startup and refresh every 2s until game starts
+function showRandomDice() {
+  const diceArea = document.getElementById("diceArea");
+  let randomFaces = [];
+  for (let i = 0; i < 3; i++) {
+    randomFaces.push(rollDie());
+  }
+  diceArea.innerHTML = renderDice(randomFaces);
+
+  // Animate idle dice too
+  const diceImgs = diceArea.querySelectorAll(".die");
+  diceImgs.forEach(die => {
+    die.classList.add("roll");
+    setTimeout(() => die.classList.remove("roll"), 600);
+  });
+}
+
+// Run once on page load
+document.addEventListener("DOMContentLoaded", () => {
+  showRandomDice();
+  idleDiceInterval = setInterval(showRandomDice, 2000); // refresh every 2s
+});
