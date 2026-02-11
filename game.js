@@ -32,9 +32,8 @@ document.getElementById("rollBtn").addEventListener("click", () => {
     outcomes.push(rollDie());
   }
 
-  // Show dice images AND text outcomes
-  const diceArea = document.getElementById("diceArea");
-  diceArea.innerHTML = renderDice(outcomes);
+  // Animate dice roll with 3D spin
+  animateDice(outcomes);
 
   document.getElementById("result").innerHTML =
     players[currentPlayer] + " rolled: " + outcomes.join(", ");
@@ -78,6 +77,21 @@ function rollDie() {
   // Must match your actual dice file names
   const sides = ["Left", "Right", "Center", "Dottt", "Wild"];
   return sides[Math.floor(Math.random() * sides.length)];
+}
+
+// Animate dice with CSS spin effect
+function animateDice(outcomes) {
+  const diceArea = document.getElementById("diceArea");
+  diceArea.innerHTML = renderDice(outcomes);
+
+  const diceImgs = diceArea.querySelectorAll(".die");
+  diceImgs.forEach((die, i) => {
+    die.classList.add("roll");
+    setTimeout(() => {
+      die.classList.remove("roll");
+      die.src = `assets/dice/${outcomes[i]}.png`; // final face
+    }, 600);
+  });
 }
 
 // Render dice images
