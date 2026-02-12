@@ -72,10 +72,19 @@
       <div id="currentTurn">Current turn: -</div>
     </section>
 
-    <!-- ROLL HISTORY -->
-    <section id="history">
-      <h2>Roll History</h2>
-      <div id="rollHistory"></div>
+    <!-- RIGHT COLUMN: HISTORY + WILD PANEL -->
+    <section id="rightColumn">
+      <!-- ROLL HISTORY -->
+      <section id="history">
+        <h2>Roll History</h2>
+        <div id="rollHistory"></div>
+      </section>
+
+      <!-- WILD STEAL PANEL -->
+      <section id="wildPanel">
+        <h2>Wild Steals</h2>
+        <div id="wildContent"></div>
+      </section>
     </section>
   </main>
 
@@ -90,11 +99,6 @@
       <button id="sendBtn">Send</button>
     </div>
   </section>
-
-  <!-- ⭐ WILD STEAL MODAL (Option C) -->
-  <div id="wildModal" class="modal hidden">
-    <div class="modal-content" id="wildContent"></div>
-  </div>
 
   <script src="game.js"></script>
   <script src="chat.js"></script>
