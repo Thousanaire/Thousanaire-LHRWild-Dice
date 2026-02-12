@@ -75,8 +75,7 @@ main {
   width: 100%;
   padding: 1rem;
   box-sizing: border-box;
-  flex-wrap: wrap;
-  overflow-x: hidden;
+  gap: 1rem;
 }
 
 /* Game Board */
@@ -118,6 +117,19 @@ main {
   box-shadow: 0 0 15px rgba(255,64,129,0.8);
   border-radius: 12px;
   transform: scale(1.08);
+}
+
+.player.eliminated {
+  opacity: 0.4;
+}
+
+.player.eliminated .avatar {
+  filter: grayscale(100%);
+}
+
+.player.eliminated .name,
+.player.eliminated .chips {
+  color: #888;
 }
 
 .avatar {
@@ -195,9 +207,16 @@ main {
   cursor: not-allowed;
 }
 
-/* RIGHT SIDE PANEL (History + Chat) */
-#history {
+/* RIGHT COLUMN (History + Wild Panel) */
+#rightColumn {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Roll History Panel */
+#history {
   background: #1e1e1e;
   color: #fff;
   padding: 1rem;
@@ -205,8 +224,6 @@ main {
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
-  height: auto;
-  max-height: 500px;
   box-sizing: border-box;
 }
 
@@ -233,6 +250,44 @@ main {
   font-size: 14px;
   color: #ddd;
   box-shadow: 0 0 4px rgba(255,64,129,0.3);
+}
+
+/* Wild Steal Panel */
+#wildPanel {
+  background: #1e1e1e;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  box-sizing: border-box;
+  min-height: 80px;
+}
+
+#wildContent h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+#wildContent p {
+  margin: 0.25rem 0;
+}
+
+#wildContent button {
+  margin: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ff4081, #7c4dff);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+#wildContent button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255,64,129,0.7);
 }
 
 /* Chat Box */
@@ -283,62 +338,6 @@ main {
   cursor: pointer;
 }
 
-/* ⭐ CLEAN CENTERED MODAL (Option C) */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  animation: fadeIn 0.25s ease-out;
-}
-
-.modal.hidden {
-  display: none;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.modal-content {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(255,64,129,0.6);
-  text-align: center;
-  width: 320px;
-  animation: popIn 0.25s ease-out;
-}
-
-@keyframes popIn {
-  from { transform: scale(0.85); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
-}
-
-.modal-content button {
-  margin: 6px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #ff4081, #7c4dff);
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s ease;
-}
-
-.modal-content button:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 10px rgba(255,64,129,0.7);
-}
-
 /* Optional chip steal animation hook */
 @keyframes stealPulse {
   0% { transform: scale(1); }
@@ -348,4 +347,15 @@ main {
 
 .chip-steal {
   animation: stealPulse 0.4s ease;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  main {
+    flex-direction: column;
+  }
+
+  #rightColumn {
+    width: 100%;
+  }
 }
