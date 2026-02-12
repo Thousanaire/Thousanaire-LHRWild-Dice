@@ -30,6 +30,7 @@ document.getElementById("rollBtn").addEventListener("click", () => {
   if (numDice === 0) {
     document.getElementById("results").innerText =
       players[currentPlayer] + " has no chips, skips turn.";
+    addHistory(players[currentPlayer], ["Skipped turn (no chips)"]);
     nextTurn();
     return;
   }
@@ -39,13 +40,8 @@ document.getElementById("rollBtn").addEventListener("click", () => {
     outcomes.push(rollDie());
   }
 
-  // Animate dice roll with 3D spin
+  // Animate dice roll with 3D spin above center pot
   animateDice(outcomes);
-
-  // Show dice images AND text outcomes
-  document.getElementById("results").innerHTML =
-    players[currentPlayer] + " rolled: " + renderDice(outcomes) +
-    "<br>(" + outcomes.join(", ") + ")";
 
   let wildRolled = false;
 
@@ -61,16 +57,19 @@ document.getElementById("rollBtn").addEventListener("click", () => {
       chips[currentPlayer]--;
       centerPot++;
     } else if (outcome === "Wild") {
-      wildRolled = true; // mark Wild, no chip reduction
+      wildRolled = true;
     }
     // Dottt = keep chip
   });
 
   updateTable();
 
+  // Log roll into history instead of game board
+  addHistory(players[currentPlayer], outcomes);
+
   if (wildRolled) {
-    document.getElementById("results").innerHTML +=
-      `<br>${players[currentPlayer]} rolled a Wild! Choose a player to steal from.`;
+    document.getElementById("results").innerHTML =
+      `${players[currentPlayer]} rolled a Wild! Choose a player to steal from.`;
     showStealOptions(currentPlayer);
   } else {
     checkWinner();
@@ -129,6 +128,7 @@ function checkWinner() {
     let winnerIndex = chips.findIndex(c => c > 0);
     document.getElementById("results").innerText =
       players[winnerIndex] + " wins the pot of " + centerPot + "!";
+    addHistory(players[winnerIndex], ["Winner!"]);
     document.getElementById("rollBtn").disabled = true;
     highlightCurrentPlayer();
   }
@@ -174,6 +174,15 @@ function showStealOptions(rollerIndex) {
   });
 
   resultsDiv.appendChild(optionsDiv);
+}
+
+// Add roll history
+function addHistory(player, outcomes) {
+  const historyDiv = document.getElementById("rollHistory");
+  const entry = document.createElement("div");
+  const time = new Date().toLocaleTimeString();
+  entry.textContent = `${player} rolled: (${outcomes.join(", ")}) at ${time}`;
+  historyDiv.prepend(entry);
 }
 
 // Show random dice faces at startup and refresh every 2s until game starts
