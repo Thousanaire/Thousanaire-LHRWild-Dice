@@ -4,6 +4,9 @@ let centerPot = 0;
 let currentPlayer = 0;
 let idleDiceInterval;
 
+let eliminated = [false, false, false, false];      // permanently out
+let danger = [false, false, false, false];          // 0 chips, waiting for next turn
+
 // logical seat order (clockwise)
 const logicalPositions = ["top", "right", "bottom", "left"];
 
@@ -27,11 +30,16 @@ function initSeatMapping() {
 document.getElementById("joinBtn").addEventListener("click", () => {
   const name = document.getElementById("nameInput").value.trim();
   if (!name) return;
-  if (players.length >= 4) return;
 
-  const logicalSeat = players.length; // 0,1,2,3 clockwise
+  // find first empty logical seat (0-3)
+  let logicalSeat = players.findIndex(p => !p);
+  if (logicalSeat === -1) logicalSeat = players.length;
+  if (logicalSeat >= 4) return;
+
   players[logicalSeat] = name;
   chips[logicalSeat] = 3;
+  eliminated[logicalSeat] = false;
+  danger[logicalSeat] = false;
 
   updateTable();
   document.getElementById("nameInput").value = "";
@@ -43,25 +51,38 @@ document.getElementById("joinBtn").addEventListener("click", () => {
   }
 });
 
-// LEFT = clockwise
+// LEFT = clockwise to next non-eliminated player
 function getLeftSeatIndex(seat) {
-  return (seat + 1) % 4;
+  let idx = seat;
+  for (let i = 0; i < 4; i++) {
+    idx = (idx + 1) % 4;
+    if (players[idx] && !eliminated[idx]) return idx;
+  }
+  return seat;
 }
 
-// RIGHT = counter‑clockwise
+// RIGHT = counter‑clockwise to next non-eliminated player
 function getRightSeatIndex(seat) {
-  return (seat - 1 + 4) % 4;
+  let idx = seat;
+  for (let i = 0; i < 4; i++) {
+    idx = (idx - 1 + 4) % 4;
+    if (players[idx] && !eliminated[idx]) return idx;
+  }
+  return seat;
 }
 
 // Roll dice
 document.getElementById("rollBtn").addEventListener("click", () => {
   if (players.length === 0) return;
+  if (!players[currentPlayer] || eliminated[currentPlayer]) return;
 
   let numDice = Math.min(chips[currentPlayer], 3);
   if (numDice === 0) {
     document.getElementById("results").innerText =
       players[currentPlayer] + " has no chips, skips turn.";
     addHistory(players[currentPlayer], ["Skipped turn (no chips)"]);
+    // mark danger if they have 0
+    danger[currentPlayer] = true;
     nextTurn();
     return;
   }
@@ -77,15 +98,20 @@ document.getElementById("rollBtn").addEventListener("click", () => {
     if (outcome === "Left" && chips[currentPlayer] > 0) {
       const leftSeat = getLeftSeatIndex(currentPlayer);
       chips[currentPlayer]--;
+      if (chips[currentPlayer] === 0) danger[currentPlayer] = true;
       chips[leftSeat]++;
+      danger[leftSeat] = false;
     }
     else if (outcome === "Right" && chips[currentPlayer] > 0) {
       const rightSeat = getRightSeatIndex(currentPlayer);
       chips[currentPlayer]--;
+      if (chips[currentPlayer] === 0) danger[currentPlayer] = true;
       chips[rightSeat]++;
+      danger[rightSeat] = false;
     }
     else if (outcome === "Center" && chips[currentPlayer] > 0) {
       chips[currentPlayer]--;
+      if (chips[currentPlayer] === 0) danger[currentPlayer] = true;
       centerPot++;
     }
     else if (outcome === "Wild") {
@@ -144,36 +170,74 @@ function updateTable() {
     const nameDiv = playerDiv.querySelector(".name");
     const chipsDiv = playerDiv.querySelector(".chips");
 
-    if (nameDiv) nameDiv.textContent = name || "";
-    if (chipsDiv) chipsDiv.textContent = name ? `Chips: ${chipCount}` : "";
+    playerDiv.classList.remove("eliminated");
+
+    if (!name) {
+      if (nameDiv) nameDiv.textContent = "";
+      if (chipsDiv) chipsDiv.textContent = "";
+      continue;
+    }
+
+    if (nameDiv) nameDiv.textContent = name;
+
+    if (eliminated[logicalSeat]) {
+      playerDiv.classList.add("eliminated");
+      if (chipsDiv) chipsDiv.textContent = "Eliminated";
+    } else {
+      if (chipsDiv) chipsDiv.textContent = `Chips: ${chipCount}`;
+    }
   }
 
   document.getElementById("centerPot").innerText = `Center Pot: ${centerPot}`;
 }
 
-// FIXED TURN ROTATION — no skipping, no repeats
+// FIXED TURN ROTATION with elimination logic
 function nextTurn() {
   if (players.length === 0) return;
 
+  let attempts = 0;
   let next = currentPlayer;
 
-  do {
+  while (attempts < 10) {
     next = (next + 1) % 4;
-  } while (!players[next]); // skip empty seats
+    attempts++;
+
+    if (!players[next]) continue;
+
+    if (eliminated[next]) continue;
+
+    if (chips[next] === 0) {
+      // already in danger and still 0 -> eliminate
+      if (danger[next]) {
+        eliminated[next] = true;
+        updateTable();
+        continue;
+      } else {
+        // mark danger and skip this turn
+        danger[next] = true;
+        continue;
+      }
+    }
+
+    // valid next player
+    break;
+  }
 
   currentPlayer = next;
   highlightCurrentPlayer();
 }
 
 function checkWinner() {
-  let activePlayers = chips.filter((c, i) => players[i] && c > 0).length;
+  let activePlayers = players.filter((p, i) => p && !eliminated[i]).length;
   if (activePlayers === 1) {
-    let winnerIndex = chips.findIndex((c, i) => players[i] && c > 0);
-    document.getElementById("results").innerText =
-      players[winnerIndex] + " wins the pot of " + centerPot + "!";
-    addHistory(players[winnerIndex], ["Winner!"]);
-    document.getElementById("rollBtn").disabled = true;
-    highlightCurrentPlayer();
+    let winnerIndex = players.findIndex((p, i) => p && !eliminated[i]);
+    if (winnerIndex !== -1) {
+      document.getElementById("results").innerText =
+        players[winnerIndex] + " wins the pot of " + centerPot + "!";
+      addHistory(players[winnerIndex], ["Winner!"]);
+      document.getElementById("rollBtn").disabled = true;
+      highlightCurrentPlayer();
+    }
   }
 }
 
@@ -181,6 +245,11 @@ function highlightCurrentPlayer() {
   document.querySelectorAll('.player').forEach(el => el.classList.remove('active'));
 
   if (players.length === 0) {
+    document.getElementById("currentTurn").textContent = "Current turn: -";
+    return;
+  }
+
+  if (eliminated[currentPlayer] || !players[currentPlayer]) {
     document.getElementById("currentTurn").textContent = "Current turn: -";
     return;
   }
@@ -195,34 +264,34 @@ function highlightCurrentPlayer() {
 
 /*
 ===========================================
-⭐ FLEXIBLE MODAL WILD STEAL LOGIC (Option B)
+⭐ FLEXIBLE WILD STEAL LOGIC (Side Panel)
 ===========================================
 */
 function handleWildSteals(rollerIndex, wildCount) {
-  const modal = document.getElementById("wildModal");
-  const content = document.getElementById("wildContent");
+  const wildContent = document.getElementById("wildContent");
   const rollBtn = document.getElementById("rollBtn");
 
   let stealsRemaining = wildCount;
 
-  // Disable rolling while modal is active
   rollBtn.disabled = true;
 
-  function renderModal() {
-    content.innerHTML = `<h3>${players[rollerIndex]} has ${stealsRemaining} steal(s)</h3>`;
+  function renderWildPanel() {
+    wildContent.innerHTML = `<h3>${players[rollerIndex]} has ${stealsRemaining} steal(s)</h3>`;
 
     const opponents = players
       .map((p, i) => ({ name: p, index: i }))
-      .filter(o => o.index !== rollerIndex && chips[o.index] > 0);
+      .filter(o =>
+        o.index !== rollerIndex &&
+        pExists(o.index) &&
+        chips[o.index] > 0 &&
+        !eliminated[o.index]
+      );
 
     if (opponents.length === 0) {
-      content.innerHTML += `<p>No opponents have chips to steal.</p>`;
-      setTimeout(() => {
-        modal.classList.add("hidden");
-        rollBtn.disabled = false;
-        checkWinner();
-        nextTurn();
-      }, 1200);
+      wildContent.innerHTML += `<p>No opponents have chips to steal.</p>`;
+      rollBtn.disabled = false;
+      checkWinner();
+      nextTurn();
       return;
     }
 
@@ -230,30 +299,36 @@ function handleWildSteals(rollerIndex, wildCount) {
       const btn = document.createElement("button");
       btn.textContent = `Steal from ${opponent.name}`;
       btn.onclick = () => {
-        // One steal per click
         if (chips[opponent.index] > 0) {
           chips[opponent.index]--;
+          if (chips[opponent.index] === 0) {
+            danger[opponent.index] = true;
+          }
           chips[rollerIndex]++;
+          danger[rollerIndex] = false;
           stealsRemaining--;
         }
 
         updateTable();
 
         if (stealsRemaining <= 0) {
-          modal.classList.add("hidden");
+          wildContent.innerHTML = "";
           rollBtn.disabled = false;
           checkWinner();
           nextTurn();
         } else {
-          renderModal();
+          renderWildPanel();
         }
       };
-      content.appendChild(btn);
+      wildContent.appendChild(btn);
     });
   }
 
-  modal.classList.remove("hidden");
-  renderModal();
+  renderWildPanel();
+}
+
+function pExists(i) {
+  return typeof players[i] !== "undefined" && players[i] !== null;
 }
 
 // Add roll history
