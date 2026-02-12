@@ -231,7 +231,7 @@ main {
   cursor: not-allowed;
 }
 
-/* RIGHT COLUMN (Wild Panel → History → Chat) */
+/* RIGHT COLUMN (Wild → History → Chat) */
 #rightColumn {
   flex: 1;
   display: flex;
@@ -248,31 +248,7 @@ main {
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-  box-sizing: border-box;
-  min-height: 80px;
-}
-
-#wildContent h3 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-#wildContent button {
-  margin: 4px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #ff4081, #7c4dff);
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  transition: 0.2s ease;
-}
-
-#wildContent button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(255,64,129,0.7);
+  font-size: 13px; /* smaller */
 }
 
 /* Roll History Panel */
@@ -285,6 +261,7 @@ main {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  font-size: 13px; /* smaller */
 }
 
 #rollHistory {
@@ -293,10 +270,11 @@ main {
   border-radius: 8px;
   padding: 0.8rem;
   overflow-y: auto;
-  height: 180px;
-  max-height: 180px;
+  height: 165px;       /* updated */
+  max-height: 165px;   /* updated */
   margin-top: 0.5rem;
   border: 1px solid #333;
+  font-size: 13px; /* smaller */
 }
 
 .history-entry {
@@ -304,12 +282,12 @@ main {
   margin-bottom: 6px;
   background: #333;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   color: #ddd;
   box-shadow: 0 0 4px rgba(255,64,129,0.3);
 }
 
-/* ⭐ Chat Box (now under Roll History) ⭐ */
+/* Chat Box (under Roll History) */
 #chat {
   background: #1e1e1e;
   border-radius: 12px;
@@ -317,10 +295,11 @@ main {
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   box-sizing: border-box;
   width: 100%;
-  height: 150px;
-  max-height: 150px;
+  height: 165px;       /* updated */
+  max-height: 165px;   /* updated */
   display: flex;
   flex-direction: column;
+  font-size: 13px; /* smaller */
 }
 
 #chatMessages {
@@ -331,6 +310,7 @@ main {
   border-radius: 8px;
   padding: 0.8rem;
   margin-bottom: 0.5rem;
+  font-size: 13px;
 }
 
 .chat-input {
@@ -345,6 +325,7 @@ main {
   border: 1px solid #444;
   background: #222;
   color: #fff;
+  font-size: 13px;
 }
 
 #sendBtn {
@@ -353,6 +334,7 @@ main {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  font-size: 13px;
 }
 
 /* Flying chip animation (enhanced) */
