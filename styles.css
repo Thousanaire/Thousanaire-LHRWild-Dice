@@ -309,7 +309,7 @@ main {
   box-shadow: 0 0 4px rgba(255,64,129,0.3);
 }
 
-/* Chat Box (now under Roll History) */
+/* ⭐ Chat Box (now under Roll History) ⭐ */
 #chat {
   background: #1e1e1e;
   border-radius: 12px;
@@ -317,8 +317,8 @@ main {
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   box-sizing: border-box;
   width: 100%;
-  height: 160px;
-  max-height: 160px;
+  height: 150px;
+  max-height: 150px;
   display: flex;
   flex-direction: column;
 }
