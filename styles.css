@@ -249,6 +249,19 @@ main {
   min-height: 80px;
 }
 
+/* ⭐ NEW Wild Steal Notification Bubble ⭐ */
+.wild-bubble {
+  background: linear-gradient(135deg, #ff4081, #7c4dff);
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(255,64,129,0.6);
+}
+
 #wildContent h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
