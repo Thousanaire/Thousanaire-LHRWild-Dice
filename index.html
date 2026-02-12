@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Thousanaire LRC Dot Game</title>
+  <title>Thousanaire: Left Right Center Dot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,16 +12,15 @@
     <h1>Thousanaire: Left Right Center Dot</h1>
 
     <div id="joinGame">
-      <input type="text" id="nameInput" placeholder="Enter your name" aria-label="Enter your name">
-
-      <select id="avatarSelect" aria-label="Choose avatar">
+      <input type="text" id="nameInput" placeholder="Enter your name">
+      <select id="avatarSelect">
         <option value="assets/avatar/AvatarOne.png">Avatar 1</option>
         <option value="assets/avatar/AvatarTwo.png">Avatar 2</option>
         <option value="assets/avatar/Avatar3.png">Avatar 3</option>
         <option value="assets/avatar/AvatarFour.png">Avatar 4</option>
       </select>
 
-      <select id="colorSelect" aria-label="Choose color">
+      <select id="colorSelect">
         <option value="#ff4081">Pink</option>
         <option value="#7c4dff">Purple</option>
         <option value="#00e5ff">Cyan</option>
@@ -38,47 +37,36 @@
       <h2>Game Board</h2>
 
       <div id="table">
-        <!-- TOP PLAYER -->
         <div class="player top" id="player0">
-          <img src="assets/avatar/AvatarOne.png" class="avatar" alt="Player 0 Avatar">
+          <img src="assets/avatar/AvatarOne.png" class="avatar">
           <div class="name"></div>
           <div class="chips"></div>
         </div>
 
-        <!-- LEFT PLAYER -->
         <div class="player left" id="player1">
-          <img src="assets/avatar/AvatarTwo.png" class="avatar" alt="Player 1 Avatar">
+          <img src="assets/avatar/AvatarTwo.png" class="avatar">
           <div class="name"></div>
           <div class="chips"></div>
         </div>
 
-        <!-- CENTER AREA -->
         <div id="centerArea">
-          <div id="diceArea">
-            <img src="assets/dice/die1.png" class="die" id="die1" alt="Die 1">
-            <img src="assets/dice/die2.png" class="die" id="die2" alt="Die 2">
-            <img src="assets/dice/die3.png" class="die" id="die3" alt="Die 3">
-          </div>
-
+          <div id="diceArea"></div>
           <div id="centerPot">Center Pot: 0</div>
         </div>
 
-        <!-- RIGHT PLAYER -->
         <div class="player right" id="player2">
-          <img src="assets/avatar/Avatar3.png" class="avatar" alt="Player 2 Avatar">
+          <img src="assets/avatar/Avatar3.png" class="avatar">
           <div class="name"></div>
           <div class="chips"></div>
         </div>
 
-        <!-- BOTTOM PLAYER -->
         <div class="player bottom" id="player3">
-          <img src="assets/avatar/AvatarFour.png" class="avatar" alt="Player 3 Avatar">
+          <img src="assets/avatar/AvatarFour.png" class="avatar">
           <div class="name"></div>
           <div class="chips"></div>
         </div>
       </div>
 
-      <!-- CONTROLS -->
       <div class="controls">
         <button id="rollBtn">Roll Dice</button>
         <button id="resetBtn">Reset Game</button>
@@ -88,35 +76,33 @@
       <div id="currentTurn">Current turn: -</div>
     </section>
 
-    <!-- RIGHT COLUMN: WILD PANEL ABOVE HISTORY -->
+    <!-- RIGHT COLUMN -->
     <section id="rightColumn">
 
-      <!-- WILD STEAL PANEL -->
       <section id="wildPanel">
         <h2>Wild Steals</h2>
         <div id="wildContent"></div>
       </section>
 
-      <!-- ROLL HISTORY -->
       <section id="history">
         <h2>Roll History</h2>
         <div id="rollHistory"></div>
       </section>
 
+      <!-- ⭐ CHAT BOX MOVED HERE ⭐ -->
+      <section id="chat">
+        <h2>Chat Box</h2>
+
+        <div id="chatMessages"></div>
+
+        <div class="chat-input">
+          <input type="text" id="chatInput" placeholder="Type a message...">
+          <button id="sendBtn">Send</button>
+        </div>
+      </section>
+
     </section>
   </main>
-
-  <!-- CHAT AREA -->
-  <section id="chat">
-    <h2>Chat Box</h2>
-
-    <div id="chatMessages"></div>
-
-    <div class="chat-input">
-      <input type="text" id="chatInput" placeholder="Type a message..." aria-label="Chat input">
-      <button id="sendBtn">Send</button>
-    </div>
-  </section>
 
   <!-- GAME OVER MODAL -->
   <div id="gameOverOverlay" class="modal-overlay hidden">
