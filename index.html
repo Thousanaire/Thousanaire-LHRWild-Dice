@@ -13,6 +13,21 @@
 
     <div id="joinGame">
       <input type="text" id="nameInput" placeholder="Enter your name" aria-label="Enter your name">
+
+      <select id="avatarSelect" aria-label="Choose avatar">
+        <option value="assets/avatar/AvatarOne.png">Avatar 1</option>
+        <option value="assets/avatar/AvatarTwo.png">Avatar 2</option>
+        <option value="assets/avatar/Avatar3.png">Avatar 3</option>
+        <option value="assets/avatar/AvatarFour.png">Avatar 4</option>
+      </select>
+
+      <select id="colorSelect" aria-label="Choose color">
+        <option value="#ff4081">Pink</option>
+        <option value="#7c4dff">Purple</option>
+        <option value="#00e5ff">Cyan</option>
+        <option value="#ffeb3b">Gold</option>
+      </select>
+
       <button id="joinBtn">Join Game</button>
     </div>
   </header>
@@ -27,14 +42,14 @@
         <div class="player top" id="player0">
           <img src="assets/avatar/AvatarOne.png" class="avatar" alt="Player 0 Avatar">
           <div class="name"></div>
-          <div class="chips">Chips: 3</div>
+          <div class="chips"></div>
         </div>
 
         <!-- LEFT PLAYER -->
         <div class="player left" id="player1">
           <img src="assets/avatar/AvatarTwo.png" class="avatar" alt="Player 1 Avatar">
           <div class="name"></div>
-          <div class="chips">Chips: 3</div>
+          <div class="chips"></div>
         </div>
 
         <!-- CENTER AREA -->
@@ -52,20 +67,21 @@
         <div class="player right" id="player2">
           <img src="assets/avatar/Avatar3.png" class="avatar" alt="Player 2 Avatar">
           <div class="name"></div>
-          <div class="chips">Chips: 3</div>
+          <div class="chips"></div>
         </div>
 
         <!-- BOTTOM PLAYER -->
         <div class="player bottom" id="player3">
           <img src="assets/avatar/AvatarFour.png" class="avatar" alt="Player 3 Avatar">
           <div class="name"></div>
-          <div class="chips">Chips: 3</div>
+          <div class="chips"></div>
         </div>
       </div>
 
       <!-- CONTROLS -->
       <div class="controls">
         <button id="rollBtn">Roll Dice</button>
+        <button id="resetBtn">Reset Game</button>
       </div>
 
       <div id="results"></div>
@@ -101,6 +117,21 @@
       <button id="sendBtn">Send</button>
     </div>
   </section>
+
+  <!-- GAME OVER MODAL -->
+  <div id="gameOverOverlay" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 id="gameOverTitle">Game Over</h2>
+      <p id="gameOverText"></p>
+      <button id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
+  <!-- SOUND EFFECTS -->
+  <audio id="sndRoll" src="assets/sounds/roll.mp3" preload="auto"></audio>
+  <audio id="sndChip" src="assets/sounds/chip.mp3" preload="auto"></audio>
+  <audio id="sndWild" src="assets/sounds/wild.mp3" preload="auto"></audio>
+  <audio id="sndWin" src="assets/sounds/win.mp3" preload="auto"></audio>
 
   <script src="game.js"></script>
   <script src="chat.js"></script>
