@@ -180,63 +180,80 @@ function checkWinner() {
 function highlightCurrentPlayer() {
   document.querySelectorAll('.player').forEach(el => el.classList.remove('active'));
 
-  if (players.length === 0) return;
+  if (players.length === 0) {
+    document.getElementById("currentTurn").textContent = "Current turn: -";
+    return;
+  }
 
   const domIndex = domSeatForLogical[currentPlayer];
   const activeDiv = document.getElementById("player" + domIndex);
   if (activeDiv) activeDiv.classList.add('active');
+
+  document.getElementById("currentTurn").textContent =
+    "Current turn: " + (players[currentPlayer] || "-");
 }
 
-/*  
+/*
 ===========================================
-⭐ CLEAN MODAL WILD STEAL LOGIC (Option C)
+⭐ FLEXIBLE MODAL WILD STEAL LOGIC (Option B)
 ===========================================
 */
 function handleWildSteals(rollerIndex, wildCount) {
   const modal = document.getElementById("wildModal");
   const content = document.getElementById("wildContent");
+  const rollBtn = document.getElementById("rollBtn");
 
-  modal.classList.remove("hidden");
+  let stealsRemaining = wildCount;
 
-  content.innerHTML = `<h3>${players[rollerIndex]} has ${wildCount} steal(s)</h3>`;
+  // Disable rolling while modal is active
+  rollBtn.disabled = true;
 
-  const opponents = players
-    .map((p, i) => ({ name: p, index: i }))
-    .filter(o => o.index !== rollerIndex && chips[o.index] > 0);
+  function renderModal() {
+    content.innerHTML = `<h3>${players[rollerIndex]} has ${stealsRemaining} steal(s)</h3>`;
 
-  if (opponents.length === 0) {
-    content.innerHTML += `<p>No opponents have chips to steal.</p>`;
-    setTimeout(() => {
-      modal.classList.add("hidden");
-      checkWinner();
-      nextTurn();
-    }, 1200);
-    return;
-  }
+    const opponents = players
+      .map((p, i) => ({ name: p, index: i }))
+      .filter(o => o.index !== rollerIndex && chips[o.index] > 0);
 
-  opponents.forEach(opponent => {
-    const btn = document.createElement("button");
-    btn.textContent = `Steal from ${opponent.name}`;
-    btn.onclick = () => {
-      // Perform all steals instantly
-      for (let i = 0; i < wildCount; i++) {
+    if (opponents.length === 0) {
+      content.innerHTML += `<p>No opponents have chips to steal.</p>`;
+      setTimeout(() => {
+        modal.classList.add("hidden");
+        rollBtn.disabled = false;
+        checkWinner();
+        nextTurn();
+      }, 1200);
+      return;
+    }
+
+    opponents.forEach(opponent => {
+      const btn = document.createElement("button");
+      btn.textContent = `Steal from ${opponent.name}`;
+      btn.onclick = () => {
+        // One steal per click
         if (chips[opponent.index] > 0) {
           chips[opponent.index]--;
           chips[rollerIndex]++;
+          stealsRemaining--;
         }
-      }
 
-      updateTable();
+        updateTable();
 
-      // Close modal immediately
-      modal.classList.add("hidden");
+        if (stealsRemaining <= 0) {
+          modal.classList.add("hidden");
+          rollBtn.disabled = false;
+          checkWinner();
+          nextTurn();
+        } else {
+          renderModal();
+        }
+      };
+      content.appendChild(btn);
+    });
+  }
 
-      checkWinner();
-      nextTurn();
-    };
-
-    content.appendChild(btn);
-  });
+  modal.classList.remove("hidden");
+  renderModal();
 }
 
 // Add roll history
