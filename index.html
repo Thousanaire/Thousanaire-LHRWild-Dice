@@ -6,52 +6,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <header>
     <h1>Thousanaire: Left Right Center Dot</h1>
+
     <div id="joinGame">
-      <input type="text" id="nameInput" placeholder="Enter your name">
+      <input type="text" id="nameInput" placeholder="Enter your name" aria-label="Enter your name">
       <button id="joinBtn">Join Game</button>
     </div>
   </header>
 
   <main>
-    <!-- Game Table -->
+    <!-- GAME BOARD -->
     <section id="game">
       <h2>Game Board</h2>
+
       <div id="table">
-        <!-- Top player -->
+        <!-- TOP PLAYER -->
         <div class="player top" id="player0">
           <img src="assets/avatar/AvatarOne.png" class="avatar" alt="Player 0 Avatar">
           <div class="name"></div>
           <div class="chips">Chips: 3</div>
         </div>
 
-        <!-- Left player -->
+        <!-- LEFT PLAYER -->
         <div class="player left" id="player1">
           <img src="assets/avatar/AvatarTwo.png" class="avatar" alt="Player 1 Avatar">
           <div class="name"></div>
           <div class="chips">Chips: 3</div>
         </div>
 
-        <!-- Center area with dice + pot -->
+        <!-- CENTER AREA -->
         <div id="centerArea">
           <div id="diceArea">
             <img src="assets/dice/die1.png" class="die" id="die1" alt="Die 1">
             <img src="assets/dice/die2.png" class="die" id="die2" alt="Die 2">
             <img src="assets/dice/die3.png" class="die" id="die3" alt="Die 3">
           </div>
+
           <div id="centerPot">Center Pot: 0</div>
         </div>
 
-        <!-- Right player -->
+        <!-- RIGHT PLAYER -->
         <div class="player right" id="player2">
           <img src="assets/avatar/Avatar3.png" class="avatar" alt="Player 2 Avatar">
           <div class="name"></div>
           <div class="chips">Chips: 3</div>
         </div>
 
-        <!-- Bottom player -->
+        <!-- BOTTOM PLAYER -->
         <div class="player bottom" id="player3">
           <img src="assets/avatar/AvatarFour.png" class="avatar" alt="Player 3 Avatar">
           <div class="name"></div>
@@ -59,31 +63,35 @@
         </div>
       </div>
 
+      <!-- CONTROLS -->
       <div class="controls">
         <button id="rollBtn">Roll Dice</button>
       </div>
+
       <div id="results"></div>
       <div id="currentTurn">Current turn: -</div>
     </section>
 
-    <!-- Roll History Panel -->
+    <!-- ROLL HISTORY -->
     <section id="history">
       <h2>Roll History</h2>
       <div id="rollHistory"></div>
     </section>
   </main>
 
-  <!-- Chat Area -->
+  <!-- CHAT AREA -->
   <section id="chat">
     <h2>Chat Box</h2>
+
     <div id="chatMessages"></div>
+
     <div class="chat-input">
-      <input type="text" id="chatInput" placeholder="Type a message...">
+      <input type="text" id="chatInput" placeholder="Type a message..." aria-label="Chat input">
       <button id="sendBtn">Send</button>
     </div>
   </section>
 
-  <!-- ⭐ Wild Steal Modal (Option C) -->
+  <!-- ⭐ WILD STEAL MODAL (Option C) -->
   <div id="wildModal" class="modal hidden">
     <div class="modal-content" id="wildContent"></div>
   </div>
