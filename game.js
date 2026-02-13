@@ -190,6 +190,7 @@ function updateTable() {
 
     playerDiv.classList.remove("eliminated");
     playerDiv.classList.remove("active");
+    playerDiv.style.boxShadow = "none";
 
     if (!name) {
       if (nameDiv) nameDiv.textContent = "";
@@ -314,7 +315,10 @@ function hideGameOver() {
 }
 
 function highlightCurrentPlayer() {
-  document.querySelectorAll('.player').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.player').forEach(el => {
+    el.classList.remove('active');
+    el.style.boxShadow = "none";
+  });
 
   if (players.length === 0) {
     document.getElementById("currentTurn").textContent = "Current turn: -";
