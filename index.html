@@ -88,7 +88,7 @@
       <div id="currentTurn">Current turn: -</div>
     </section>
 
-    <!-- RIGHT COLUMN: WILD PANEL ABOVE HISTORY -->
+    <!-- RIGHT COLUMN -->
     <section id="rightColumn">
 
       <!-- WILD STEAL PANEL -->
@@ -103,20 +103,20 @@
         <div id="rollHistory"></div>
       </section>
 
+      <!-- CHAT BOX MOVED HERE -->
+      <section id="chat">
+        <h2>Chat Box</h2>
+
+        <div id="chatMessages"></div>
+
+        <div class="chat-input">
+          <input type="text" id="chatInput" placeholder="Type a message..." aria-label="Chat input">
+          <button id="sendBtn">Send</button>
+        </div>
+      </section>
+
     </section>
   </main>
-
-  <!-- CHAT AREA -->
-  <section id="chat">
-    <h2>Chat Box</h2>
-
-    <div id="chatMessages"></div>
-
-    <div class="chat-input">
-      <input type="text" id="chatInput" placeholder="Type a message..." aria-label="Chat input">
-      <button id="sendBtn">Send</button>
-    </div>
-  </section>
 
   <!-- GAME OVER MODAL -->
   <div id="gameOverOverlay" class="modal-overlay hidden">
