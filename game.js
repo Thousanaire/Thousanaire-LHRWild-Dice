@@ -108,7 +108,7 @@ document.getElementById("rollBtn").addEventListener("click", () => {
   animateDice(outcomes);
   addHistory(players[currentPlayer], outcomes);
 
-  // New: handle Wild logic with cancellation + steals
+  // Handle Wild logic with new 3-Wild choice rule
   openWildChoicePanel(currentPlayer, outcomes);
 });
 
@@ -304,16 +304,12 @@ function highlightCurrentPlayer() {
     "Current turn: " + (players[currentPlayer] || "-");
 }
 
-/* NEW: Wild choice panel – cancel or steal, plus 3‑Wild pot rule */
+/* NEW: Wild choice panel – cancel or steal, plus 3-Wild pot vs steals choice */
 
 function openWildChoicePanel(playerIndex, outcomes) {
   const wildContent = document.getElementById("wildContent");
   const rollBtn = document.getElementById("rollBtn");
   rollBtn.disabled = true;
-
-  const canceledIndices = new Set();
-  const wildUsedAsCancel = new Set();
-  const steals = []; // { fromIndex, wildIndex }
 
   const wildIndices = [];
   const leftIndices = [];
@@ -327,18 +323,59 @@ function openWildChoicePanel(playerIndex, outcomes) {
     else if (o === "Center") centerIndices.push(i);
   });
 
-  // Special case: 3 wilds => take entire center pot
-  if (wildIndices.length === 3) {
-    chips[playerIndex] += centerPot;
-    centerPot = 0;
-    document.getElementById("results").innerText =
-      `${players[playerIndex]} rolled 3 Wilds and takes the entire center pot!`;
-    updateTable();
+  const wildCount = wildIndices.length;
+
+  // Case 1: No Wilds - immediately apply L/R/C/Dot and end turn
+  if (wildCount === 0) {
+    document.getElementById("results").innerText = 
+      `${players[playerIndex]} rolled: ${outcomes.join(", ")}`;
+    applyOutcomesOnly(playerIndex, outcomes);
     wildContent.innerHTML = "";
     rollBtn.disabled = false;
     handleEndOfTurn();
     return;
   }
+
+  // Case 2: 3 Wilds - show choice panel (Take pot vs Use as steals)
+  if (wildCount === 3) {
+    wildContent.innerHTML = `
+      <h3>${players[playerIndex]} rolled 3 Wilds!</h3>
+      <p>Choose one:</p>
+      <button id="takePotBtn">Take center pot (${centerPot} chips)</button>
+      <button id="useStealsBtn">Use Wilds as steals instead</button>
+    `;
+
+    document.getElementById("takePotBtn").onclick = () => {
+      // Take pot option
+      chips[playerIndex] += centerPot;
+      centerPot = 0;
+      document.getElementById("results").innerText =
+        `${players[playerIndex]} rolled 3 Wilds and takes the entire center pot!`;
+      updateTable();
+      wildContent.innerHTML = "";
+      rollBtn.disabled = false;
+      handleEndOfTurn();
+    };
+
+    document.getElementById("useStealsBtn").onclick = () => {
+      // Use as steals - fall through to normal Wild spending flow
+      wildContent.innerHTML = "";
+      handleWildsNormalFlow(playerIndex, outcomes, wildIndices, leftIndices, rightIndices, centerIndices);
+    };
+    return;
+  }
+
+  // Case 3: 1-2 Wilds - normal Wild spending flow
+  handleWildsNormalFlow(playerIndex, outcomes, wildIndices, leftIndices, rightIndices, centerIndices);
+}
+
+function handleWildsNormalFlow(playerIndex, outcomes, wildIndices, leftIndices, rightIndices, centerIndices) {
+  const wildContent = document.getElementById("wildContent");
+  const rollBtn = document.getElementById("rollBtn");
+
+  const canceledIndices = new Set();
+  const wildUsedAsCancel = new Set();
+  const steals = []; // { fromIndex, wildIndex }
 
   function remainingWildCount() {
     let usedCount = wildUsedAsCancel.size + steals.length;
@@ -346,14 +383,10 @@ function openWildChoicePanel(playerIndex, outcomes) {
   }
 
   function renderWildPanel() {
-    wildContent.innerHTML = "";
-
-    const info = document.createElement("div");
-    info.innerHTML = `
+    wildContent.innerHTML = `
       <h3>${players[playerIndex]} rolled: ${outcomes.join(", ")}</h3>
       <p>Wilds remaining: ${remainingWildCount()}</p>
     `;
-    wildContent.appendChild(info);
 
     function firstNotCanceled(indicesArray) {
       return indicesArray.find(i => !canceledIndices.has(i));
@@ -365,10 +398,10 @@ function openWildChoicePanel(playerIndex, outcomes) {
       );
     }
 
+    // Cancel buttons
     function addCancelButton(label, targetArray) {
       const available = firstNotCanceled(targetArray);
-      if (available === undefined) return;
-      if (remainingWildCount() <= 0) return;
+      if (available === undefined || remainingWildCount() <= 0) return;
 
       const btn = document.createElement("button");
       btn.textContent = `Use Wild to cancel ${label}`;
@@ -387,7 +420,7 @@ function openWildChoicePanel(playerIndex, outcomes) {
     addCancelButton("Right", rightIndices);
     addCancelButton("Center", centerIndices);
 
-    // Use Wild as steals
+    // Steal buttons
     if (remainingWildCount() > 0) {
       const opponents = players
         .map((p, i) => ({ name: p, index: i }))
@@ -412,23 +445,81 @@ function openWildChoicePanel(playerIndex, outcomes) {
       });
     }
 
-    const doneBtn = document.createElement("button");
-    doneBtn.textContent = "Apply results";
-    doneBtn.onclick = () => {
-      applyWildAndOutcomes(playerIndex, outcomes, {
-        canceledIndices,
-        wildIndices,
-        wildUsedAsCancel,
-        steals
-      });
-      wildContent.innerHTML = "";
-      rollBtn.disabled = false;
-      handleEndOfTurn();
-    };
-    wildContent.appendChild(doneBtn);
+    // Auto-apply when no Wilds remain
+    if (remainingWildCount() === 0) {
+      const autoApplyBtn = document.createElement("button");
+      autoApplyBtn.textContent = "Auto-apply remaining results";
+      autoApplyBtn.style.fontWeight = "bold";
+      autoApplyBtn.onclick = () => {
+        applyWildAndOutcomes(playerIndex, outcomes, {
+          canceledIndices,
+          wildIndices,
+          wildUsedAsCancel,
+          steals
+        });
+        wildContent.innerHTML = "";
+        rollBtn.disabled = false;
+        handleEndOfTurn();
+      };
+      wildContent.appendChild(autoApplyBtn);
+    } else {
+      // Manual apply button when Wilds remain
+      const doneBtn = document.createElement("button");
+      doneBtn.textContent = "Apply results (unused Wilds do nothing)";
+      doneBtn.onclick = () => {
+        applyWildAndOutcomes(playerIndex, outcomes, {
+          canceledIndices,
+          wildIndices,
+          wildUsedAsCancel,
+          steals
+        });
+        wildContent.innerHTML = "";
+        rollBtn.disabled = false;
+        handleEndOfTurn();
+      };
+      wildContent.appendChild(doneBtn);
+    }
   }
 
   renderWildPanel();
+}
+
+// NEW: Apply only L/R/C/Dot (no Wild handling) for 0-Wild case
+function applyOutcomesOnly(playerIndex, outcomes) {
+  outcomes.forEach((o) => {
+    if (o === "Left") {
+      if (chips[playerIndex] > 0) {
+        const leftSeat = getLeftSeatIndex(playerIndex);
+        chips[playerIndex]--;
+        if (chips[playerIndex] === 0) danger[playerIndex] = true;
+        chips[leftSeat]++;
+        danger[leftSeat] = false;
+        animateChipTransfer(playerIndex, leftSeat, "left");
+        playSound("sndChip");
+      }
+    } else if (o === "Right") {
+      if (chips[playerIndex] > 0) {
+        const rightSeat = getRightSeatIndex(playerIndex);
+        chips[playerIndex]--;
+        if (chips[playerIndex] === 0) danger[playerIndex] = true;
+        chips[rightSeat]++;
+        danger[rightSeat] = false;
+        animateChipTransfer(playerIndex, rightSeat, "right");
+        playSound("sndChip");
+      }
+    } else if (o === "Center") {
+      if (chips[playerIndex] > 0) {
+        chips[playerIndex]--;
+        if (chips[playerIndex] === 0) danger[playerIndex] = true;
+        centerPot++;
+        animateChipTransfer(playerIndex, null, "center");
+        playSound("sndChip");
+      }
+    }
+    // Dottt/Wild: do nothing
+  });
+
+  updateTable();
 }
 
 function applyWildAndOutcomes(playerIndex, outcomes, wildData) {
@@ -450,12 +541,8 @@ function applyWildAndOutcomes(playerIndex, outcomes, wildData) {
   outcomes.forEach((o, i) => {
     if (canceledIndices.has(i)) return;
 
-    // If this is a Wild that was not used for cancel or steal, treat as "do nothing"
-    if (
-      wildIndices.includes(i) &&
-      !wildUsedAsCancel.has(i) &&
-      !steals.some(s => s.wildIndex === i)
-    ) {
+    // Skip Wilds that weren't used for cancel/steal (they do nothing)
+    if (wildIndices.includes(i) && !wildUsedAsCancel.has(i) && !steals.some(s => s.wildIndex === i)) {
       return;
     }
 
