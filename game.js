@@ -1,5 +1,3 @@
-game.js fully function with the exception of 4 player need after game started. only should be required at the beggining not when game starts. Once game starts and a player gets eliminated, game should continue until last player is standing 
-
 /* ============================================================
    CLEAN INTRO — IMAGE + VOICE ONLY + SUBTLE FLOAT
    ============================================================ */
@@ -793,3 +791,4 @@ document.addEventListener("DOMContentLoaded", () => {
   idleDiceInterval = setInterval(showRandomDice, 2000);
   startIntroOverlay();
 });
+
