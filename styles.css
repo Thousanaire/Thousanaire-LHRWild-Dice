@@ -539,7 +539,7 @@ section {
 }
 
 /* ============================================================
-   INTRO OVERLAY — SAFE ADD-ON (DOES NOT TOUCH BOARD)
+   INTRO OVERLAY — FINAL UPDATED VERSION
    ============================================================ */
 
 .intro-overlay {
@@ -552,31 +552,47 @@ section {
   z-index: 99999;
 }
 
+/* Panel centers everything */
 .intro-panel {
   position: relative;
   width: 100%;
-  max-width: 520px;
+  max-width: 650px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
 }
 
 /* HOST IMAGE */
 .intro-avatar {
-  width: auto;
+  width: 100%;
   height: auto;
-  max-width: 100%;
   border-radius: 12px;
   display: block;
 }
 
-/* DESKTOP/LAPTOP: make host.png bigger */
+/* DESKTOP/LAPTOP: 4× bigger */
 @media (min-width: 900px) {
   .intro-avatar {
-    width: 420px;
+    width: 800px;
+    max-width: 100%;
   }
 }
 
 /* MOBILE: full width */
 @media (max-width: 768px) {
   .intro-avatar {
+    width: 100%;
+  }
+}
+
+/* TYPEWRITER TEXT BELOW HOST IMAGE */
+.intro-text-wrapper {
+  width: 100%;
+  margin-top: 16px;
+  text-align: center;
+}
+
+#introText {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color
