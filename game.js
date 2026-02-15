@@ -134,11 +134,11 @@ function getRightSeatIndex(seat) {
 document.getElementById("rollBtn").addEventListener("click", () => {
   const resultsEl = document.getElementById("results");
 
-  // REQUIRE 4 PLAYERS MINIMUM
-  if (activePlayerCount() < 4) {
-    if (resultsEl) {
-      resultsEl.innerText = "4 players are required to start the game.";
-    }
+  // REQUIRE 4 PLAYERS ONLY BEFORE FIRST ROLL
+if (players.filter((p, i) => p && !eliminated[i]).length < 4 && centerPot === 0 && chips.every(c => c === 3)) {
+  resultsEl.innerText = "4 players are required to start the game.";
+  return;
+}
     return;
   }
 
@@ -791,3 +791,4 @@ document.addEventListener("DOMContentLoaded", () => {
   idleDiceInterval = setInterval(showRandomDice, 2000);
   startIntroOverlay();
 });
+
