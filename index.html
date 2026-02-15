@@ -8,10 +8,16 @@
 </head>
 
 <body>
-  <!-- INTRO OVERLAY (ADD-ON) -->
+
+  <!-- INTRO OVERLAY -->
   <div id="introOverlay" class="intro-overlay">
     <div class="intro-panel">
-      <img src="assets/avatar/AvatarOne.png" class="intro-avatar" alt="Host avatar">
+
+      <div class="intro-avatar-wrapper">
+        <img src="assets/intro/host.png" class="intro-avatar" alt="Host avatar">
+        <img src="assets/intro/mouth.png" class="avatar-mouth" id="avatarMouth" alt="">
+      </div>
+
       <div class="intro-text-wrapper">
         <p id="introText"></p>
         <div class="intro-buttons">
@@ -19,9 +25,14 @@
           <button id="introEnterBtn">Enter Game</button>
         </div>
       </div>
+
     </div>
   </div>
 
+  <!-- MP3 VOICEOVER -->
+  <audio id="introVoice" src="assets/audio/intro-voiceover.mp3" preload="auto"></audio>
+
+  <!-- HEADER -->
   <header>
     <h1>Thousanaire: LEFT HUB RIGHT Wild</h1>
 
