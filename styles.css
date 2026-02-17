@@ -21,48 +21,12 @@ header {
   align-items: center;
   gap: 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  position: relative;
 }
 
 header h1 {
   margin: 0;
   font-size: clamp(1.4rem, 2vw, 1.8rem);
   letter-spacing: 0.03em;
-}
-
-/* NEW: MODE TOGGLE BUTTON */
-.mode-toggle {
-  position: absolute;
-  top: 0.75rem;
-  right: 1.25rem;
-  z-index: 10;
-}
-
-#modeSwitchBtn {
-  background: linear-gradient(135deg, #4070f4, #5a67d8);
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 0.85rem;
-  box-shadow: 0 4px 12px rgba(64, 112, 244, 0.4);
-  transition: all 0.3s ease;
-}
-
-#modeSwitchBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(64, 112, 244, 0.6);
-}
-
-#modeSwitchBtn.dealer-active {
-  background: linear-gradient(135deg, #ff4757, #ff6b7a);
-  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
-}
-
-#modeSwitchBtn.dealer-active:hover {
-  box-shadow: 0 6px 16px rgba(255, 71, 87, 0.6);
 }
 
 /* Join Game box */
@@ -282,72 +246,14 @@ section {
   100% { transform: rotateX(720deg) rotateY(360deg); }
 }
 
-/* NEW: Pot Display Classes */
-.pot-display {
-  font-size: 18px;
+#centerPot {
+  font-size: 16px;
   font-weight: bold;
-  text-align: center;
-  background: rgba(20, 20, 20, 0.9);
-  padding: 12px 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-  margin-top: 10px;
-}
-
-.pot-display.hidden {
-  display: none;
-}
-
-.pot-display.active {
-  display: block;
-}
-
-#classicPot {
   color: #fff;
-  border-color: rgba(255, 64, 129, 0.6);
-  box-shadow: 0 0 12px rgba(255, 64, 129, 0.4);
-}
-
-/* Dealer Mode Pot Styling */
-#dealerPot {
-  color: #ff4444;
-  border-color: rgba(255, 68, 68, 0.8);
-  background: rgba(40, 15, 15, 0.95);
-  box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
-}
-
-/* Twist Badges */
-.twist-badges {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.twist-badge {
-  font-size: 11px;
-  font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 12px;
-  color: #fff;
-}
-
-.twist-badge.triple-wild {
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
-  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
-}
-
-.twist-badge.triple-h {
-  background: linear-gradient(135deg, #f44336, #ef5350);
-  box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
-}
-
-.twist-badge.gamble {
-  background: linear-gradient(135deg, #FF9800, #FFB74D);
-  box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
+  background: #222;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(255,64,129,0.6);
 }
 
 /* Controls under board */
@@ -618,12 +524,6 @@ section {
     grid-template-columns: 70px 1fr 70px;
     grid-template-rows: 70px 1fr 70px;
   }
-
-  .mode-toggle {
-    position: static;
-    right: auto;
-    margin-bottom: 0.5rem;
-  }
 }
 
 @media (min-width: 1100px) {
@@ -693,16 +593,3 @@ section {
 
 .intro-buttons button {
   padding: 12px 24px;
-  background: linear-gradient(135deg, #ff4081, #7c4dff);
-  color: #fff;
-  border: none;
-  border-radius: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.intro-buttons button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 64, 129, 0.6);
-}
